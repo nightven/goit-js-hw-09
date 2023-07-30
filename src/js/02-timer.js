@@ -1,25 +1,25 @@
-// Описаний в документації
+// Import library flatpickr
 import flatpickr from 'flatpickr';
-// Додатковий імпорт стилів
+// Optional import of styles
 import 'flatpickr/dist/flatpickr.min.css';
-//імпорт методада з бібліотеки notifix
+// Import method from library notifix
 import { Report } from 'notiflix/build/notiflix-report-aio';
-
+// Get refs
 const refs = {
   inputEl: document.getElementById('datetime-picker'),
-  startBtn: document.querySelector('button'),
+  startBtn: document.querySelector('[data-start]'),
   timerEl: document.querySelector('.timer'),
 };
-
+// Receiving an event on click
 refs.startBtn.addEventListener('click', onClick, { once: true });
 let difference;
-
+// Options from flatpickr init
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-
+  
   onClose(selectedDates) {
     if (selectedDates[0] < new Date()) {
       Report.warning(
@@ -31,21 +31,24 @@ const options = {
       refs.startBtn.removeAttribute('disabled');
       const intervalId = setInterval(() => {
         difference = new Date(selectedDates[0]).getTime() - Date.now();
-        if (difference === 0) {
+        if (difference < 1000) {
           clearInterval(intervalId);
+          return;
         }
       }, 1000);
     }
   },
 };
-
+// Init library
 flatpickr(refs.inputEl, options);
 
 function onClick() {
+  // Show timer
   setInterval(() => setTimeToHTML(convertMs(difference)), 1000);
 }
 
 function setTimeToHTML({ days, hours, minutes, seconds }) {
+  // Set days, hours, minutes, seconds to timer
   refs.timerEl.children[0].querySelector('.value').innerText = days;
   refs.timerEl.children[1].querySelector('.value').innerText = hours;
   refs.timerEl.children[2].querySelector('.value').innerText = minutes;
@@ -74,5 +77,6 @@ function convertMs(ms) {
 }
 
 function addLeadingZero(value) {
+  //adding "0"
   return String(value).padStart(2, '0');
 }
