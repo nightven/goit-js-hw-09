@@ -11,7 +11,7 @@ function onSubmit(e) {
   const step = Number(e.target.step.value);
   const amount = Number(e.target.amount.value);
 
-  for (position = 1; position <= amount; position++) {
+  for (let position = 1; position <= amount; position++) {
      setTimeout(() => {
     createPromise(position, delay)
       .then(({ position, delay }) => {
