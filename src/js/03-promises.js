@@ -12,7 +12,6 @@ function onSubmit(e) {
   const amount = Number(e.target.amount.value);
 
   for (let position = 1; position <= amount; position++) {
-     setTimeout(() => {
     createPromise(position, delay)
       .then(({ position, delay }) => {
         Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
@@ -21,21 +20,20 @@ function onSubmit(e) {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
     delay += step;
-  }, delay);
-};}
+  }
+}
 
-function createPromise(position, delay){
-
+function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
   const promise = { position, delay };
-  
+
   return new Promise((res, rej) => {
-    if (shouldResolve) {
-      res(promise);
-    } else {
-      rej(promise);
-    }
+    setTimeout(() => {
+      if (shouldResolve) {
+        res(promise);
+      } else {
+        rej(promise);
+      }
+    }, delay);
   });
-  
 }
-  
