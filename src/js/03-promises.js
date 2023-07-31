@@ -10,10 +10,9 @@ function onSubmit(e) {
   let delay = Number(e.target.delay.value);
   const step = Number(e.target.step.value);
   const amount = Number(e.target.amount.value);
-  let position = 1;
 
-    const intervalId = setInterval(() => {
-      
+  for (position = 1; position <= amount; position++) {
+     setTimeout(() => {
     createPromise(position, delay)
       .then(({ position, delay }) => {
         Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
@@ -21,26 +20,22 @@ function onSubmit(e) {
       .catch(({ position, delay }) => {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
-
-      position++;
-
-    if (position > amount) {
-      clearInterval(intervalId);
-    } else {
-      delay += step;
-    }
+    delay += step;
   }, delay);
-  
-}
+};}
 
-function createPromise(position, delay) {
+function createPromise(position, delay){
 
   const shouldResolve = Math.random() > 0.3;
   const promise = { position, delay };
-
-  if (shouldResolve) {
-    return Promise.resolve(promise);
-  } else {
-    return Promise.reject(promise);
-  }
+  
+  return new Promise((res, rej) => {
+    if (shouldResolve) {
+      res(promise);
+    } else {
+      rej(promise);
+    }
+  });
+  
 }
+  
